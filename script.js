@@ -206,7 +206,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateCursorPosition() {
     if (posDisplay) {
-      posDisplay.textContent = `Pos: ${posX}, ${posY}`;
+      const roundedX = Math.round(posX);
+      const roundedY = Math.round(posY);
+      posDisplay.textContent = `Pos: ${roundedX}, ${roundedY}`;
     }
   }
 
