@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MS Paint-a-Sketch 98</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="shortcut icon"
+      href="./Assets/paint-icon.png"
+      type="image/x-icon"
+    />
+    <!-- My script goes here -->
+    <script src="script.js" defer></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Should create a screenshot to "save" using Niklas von Hertzen's library-->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <!-- Windows 98 Desktop Parody -->
+    <div class="desktop">
+      <!-- Desktop Icons (tied to make them to only show up on large enough screens) -->
+      <div class="desktop-icons" id="desktop-icons">
+        <!-- The Recycle Bin -->
+        <a
+          href="https://brainrotlang.com"
+          target="_blank"
+          class="desktop-icon-link"
+        >
+          <div class="desktop-icon" data-name="Recycle Bin" id="recycleBinIcon">
+            <div class="icon-img recycle-bin">
+              <img src="./Assets/recycle-bin.png" alt="Recycle Bin" />
+            </div>
+            <div class="icon-label">Recycle Bin</div>
+          </div>
+        </a>
+
+        <!-- My Computer(GitHub) -->
+        <a
+          href="https://github.com/Brage1025"
+          target="_blank"
+          class="desktop-icon-link"
+        >
+          <div class="desktop-icon" data-name="My Computer">
+            <div class="icon-img my-computer">
+              <img src="./Assets/my-computer.png" alt="My Computer" />
+            </div>
+            <div class="icon-label">My Computer</div>
+          </div>
+        </a>
+
+        <!-- Monster Truck Madness (One of the best games from that era)-->
+        <div class="desktop-icon" data-name="Monster Truck Madness">
+          <div class="icon-img monster-truck-madness">
+            <img
+              src="./Assets/monster-truck-madness.png"
+              alt="Monster Truck Madness"
+            />
+          </div>
+          <div class="icon-label">Monster Truck Madness</div>
+        </div>
+
+        <!-- MS Paint(Cuz let's go full circle) -->
+        <div class="desktop-icon" data-name="MS Paint">
+          <div class="icon-img ms-paint">
+            <img src="./Assets/paint-icon.png" alt="Paint" />
+          </div>
+          <div class="icon-label">Paint</div>
+        </div>
+      </div>
+
+      <!-- The Monster Truck Madness Error Window -->
+      <div
+        class="window error-window"
+        id="monster-truck-error"
+        style="left: 300px; top: 150px; display: none"
+      >
+        <div class="title-bar">
+          <span>Monster Truck Madness</span>
+          <div class="window-controls">
+            <button class="close" id="close-monster-error">X</button>
+          </div>
+        </div>
+        <div class="window-body error-body">
+          <div class="error-icon">
+            <img src="./Assets/warning.png" class="error-img" alt="Warning" />
+          </div>
+          <div class="error-message">
+            <p>
+              Insert the Monster Truck Madness CD-ROM into your CD-ROM drive.
+            </p>
+          </div>
+          <div class="error-buttons">
+            <button class="windows-button" id="error-ok">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Main Application Window -->
+      <div class="window main-app">
+        <div class="title-bar">
+          <span class="title">Untitled - Paint-a-Sketch 98</span>
+          <div class="window-controls">
+            <button class="minimize">_</button>
+            <button class="maximize">□</button>
+            <button class="close">X</button>
+          </div>
+        </div>
+
+        <!-- The Menu Bar with the Help Menu -->
+        <div class="menu-bar">
+          <div class="menu-item">
+            <span>File</span>
+            <div class="menu-dropdown">
+              <div class="menu-option">New</div>
+              <div class="menu-option">Open...</div>
+              <div class="menu-option" id="save-menu">Save</div>
+              <div class="menu-option separator"></div>
+              <div class="menu-option" id="exit-menu">Exit</div>
+            </div>
+          </div>
+          <div class="menu-item">
+            <span>Edit</span>
+            <div class="menu-dropdown">
+              <div class="menu-option">Undo</div>
+              <div class="menu-option separator"></div>
+              <div class="menu-option">Cut</div>
+              <div class="menu-option">Copy</div>
+              <div class="menu-option">Paste</div>
+            </div>
+          </div>
+          <div class="menu-item">
+            <span>View</span>
+          </div>
+          <div class="menu-item">
+            <span>Image</span>
+          </div>
+          <div class="menu-item">
+            <span>Options</span>
+          </div>
+          <!-- The Help Menu -->
+          <div class="menu-item help-menu">
+            <span>Help</span>
+            <div class="menu-dropdown">
+              <div class="menu-option" id="help-topics">Help Topics</div>
+              <div class="menu-option separator"></div>
+              <div class="menu-option" id="about-paint">
+                About Paint-a-Sketch
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-container">
+          <!-- The Tools Sidebar -->
+          <div class="tool-box">
+            <div class="tool selected" id="tool-cursor">
+              <img
+                src="./Assets/pencil.png"
+                class="tool-icon"
+                alt="Pencil"
+                title="Pencil"
+              />
+            </div>
+            <div class="tool" title="Line">╱</div>
+            <div class="tool" title="Rectangle">□</div>
+            <div class="tool" title="Ellipse">○</div>
+            <div class="tool" title="Text">A</div>
+            <div class="tool" title="Size">⚫</div>
+          </div>
+
+          <!-- The Drawing Canvas & Container for Movable Element -->
+          <div class="canvas-container" id="canvas">
+            <!-- The drawing is made with div lines via the .js -->
+            <div id="drawing-layer"></div>
+            <!-- The Movable Cursor Element -->
+            <div id="cursor"></div>
+            <div id="color-indicator"></div>
+          </div>
+
+          <!-- The Color Palette Sidebar -->
+          <div class="color-box">
+            <div
+              class="color-swatch selected"
+              style="background-color: black"
+              data-color="#000000"
+            ></div>
+            <div
+              class="color-swatch"
+              style="background-color: red"
+              data-color="#ff0000"
+            ></div>
+            <div
+              class="color-swatch"
+              style="background-color: green"
+              data-color="#008000"
+            ></div>
+            <div
+              class="color-swatch"
+              style="background-color: blue"
+              data-color="#0000ff"
+            ></div>
+            <div
+              class="color-swatch"
+              style="background-color: yellow"
+              data-color="#ffff00"
+            ></div>
+            <div
+              class="color-swatch"
+              style="background-color: #c0c0c0"
+              data-color="#c0c0c0"
+            ></div>
+          </div>
+        </div>
+
+        <!-- The Status Bar -->
+        <div class="status-bar">
+          <span>For Help, click Help Topics on the Help Menu.</span>
+          <span class="pos-display">Pos: 100, 100</span>
+          <span class="tool-display">Tool: Pencil</span>
+        </div>
+      </div>
+
+      <!-- The Instructions Window, hides it first -->
+      <div
+        class="window instructions"
+        id="instructions-window"
+        style="left: 400px; top: 100px; display: none"
+      >
+        <div class="title-bar">
+          <span>Paint-a-Sketch Help</span>
+          <div class="window-controls">
+            <button class="minimize">_</button>
+            <button class="maximize">□</button>
+            <button class="close" id="close-help">X</button>
+          </div>
+        </div>
+        <div class="window-body">
+          <div class="help-content">
+            <h3>
+              <img src="./Assets/help-book.png" class="help-icon" alt="Help" />
+              How to Use Paint-a-Sketch 98
+            </h3>
+            <div class="help-section">
+              <h4>
+                <img
+                  src="./Assets/game-controller.png"
+                  class="custom-icon"
+                  alt="Controls"
+                />
+                Controls:
+              </h4>
+              <ul>
+                <li>
+                  <strong>ARROW KEYS:</strong> Move the cursor & draw lines
+                </li>
+                <li>
+                  <strong>CLICK:</strong> Jump cursor & draw line to click
+                  position
+                </li>
+                <li>
+                  <strong>S KEY:</strong> Erases it by "shaking" (My excuse to
+                  use animation)
+                </li>
+                <li><strong>C KEY:</strong> Change drawing color</li>
+              </ul>
+            </div>
+            <div class="help-section">
+              <h4>
+                <img src="./Assets/tools.png" class="custom-icon" alt="Tools" />
+                Tools:
+              </h4>
+              <ul>
+                <li>
+                  <strong>Cursor (Selected):</strong> Draw with arrow keys or
+                  click
+                </li>
+                <li>
+                  <strong>Other tools:</strong> For decoration only (making the
+                  classic Paint vibe complete.)
+                </li>
+              </ul>
+            </div>
+            <div class="help-section">
+              <h4>
+                <img
+                  src="./Assets/lightbulb.png"
+                  class="custom-icon"
+                  alt="Tips"
+                />
+                Tips:
+              </h4>
+              <ul>
+                <li>Keep cursor within the canvas area</li>
+                <li>Try making geometric patterns!</li>
+                <li>
+                  Click the color boxes to change line color or use the C KEY
+                </li>
+              </ul>
+            </div>
+            <div class="windows-tip">
+              <strong>Windows 98 Tip:</strong> For more help, either contact me
+              directly or try to look in the Paint for Windows 98's user manual.
+              Good luck finding that manual.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The About Window -->
+      <div
+        class="window about"
+        id="about-window"
+        style="left: 450px; top: 200px; display: none"
+      >
+        <div class="title-bar">
+          <span>About Paint-a-Sketch</span>
+          <div class="window-controls">
+            <button class="close" id="close-about">X</button>
+          </div>
+        </div>
+        <div class="window-body about-body">
+          <div class="about-icon">
+            <img src="./Assets/palette.png" class="about-img" alt="Palette" />
+          </div>
+          <h3>Paint-a-Sketch 98</h3>
+          <p>Version 1.0 (1998 Edition)</p>
+          <p>© 2025 Dale Research Ltd.</p>
+          <p>
+            This is a <b>parody</b> of Windows 98 Paint<br />mixed with
+            Etch-a-Sketch mechanics.
+          </p>
+          <p>
+            The "Save" script is implimented thanks to
+            <b>Niklas von Hertzen</b>'s library: html2canvas.
+          </p>
+          <p>
+            The icons comes from <b>Alex Meub</b>'s Blog Project: Windows 98
+            Icons.
+          </p>
+          <div class="system-info">
+            <p>
+              Physical memory available to Windows: <strong>69,420 KB</strong>
+            </p>
+            <p>System resources: <strong>67% free</strong> (not really tho)</p>
+          </div>
+          <button class="windows-button" id="ok-button">OK</button>
+        </div>
+      </div>
+
+      <!-- The Monster Truck Madness Error Window -->
+
+      <div
+        class="window error-window"
+        id="monster-truck-error"
+        style="left: 300px; top: 150px; display: none"
+      >
+        <div class="title-bar">
+          <span>Monster Truck Madness</span>
+          <div class="window-controls">
+            <button class="close" id="close-monster-error">X</button>
+          </div>
+        </div>
+        <div class="window-body error-body">
+          <div class="error-content">
+            <div class="error-icon-container">
+              <img
+                src="./Assets/warning.png"
+                class="error-icon-img"
+                alt="Warning"
+              />
+            </div>
+            <div class="error-text-container">
+              <p class="error-message-text">
+                Insert the Monster Truck Madness CD-ROM into your CD-ROM drive.
+              </p>
+              <div class="error-button-container">
+                <button class="windows-button error-ok-button" id="error-ok">
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Taskbar -->
+      <div class="taskbar">
+        <button class="start-button">
+          <img src="./Assets/windows98-icon.png" class="start-icon" />
+          <span>Start</span>
+        </button>
+        <div class="taskbar-items">
+          <div class="taskbar-item">
+            <span class="taskbar-icon"
+              ><img src="./Assets/paint.png" class="taskbar-img" alt="Paint"
+            /></span>
+            <span>Paint-a-Sketch 98</span>
+          </div>
+          <div class="taskbar-item" id="help-taskbar" style="display: none">
+            <span class="taskbar-icon"
+              ><img
+                src="./Assets/question-mark.png"
+                class="taskbar-img"
+                alt="Help"
+            /></span>
+            <span>Paint-a-Sketch Help</span>
+          </div>
+        </div>
+        <div class="clock" id="clock">4:20 PM</div>
+      </div>
+    </div>
+  </body>
+</html>

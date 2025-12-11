@@ -1,0 +1,710 @@
+/* Base Windows 98 Vibe */
+body {
+  margin: 0;
+  background-color: #008080; /* The standard teal desktop color */
+  font-family: "Courier New", monospace;
+}
+.desktop {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* The Window Styling */
+.window {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  position: absolute;
+}
+.title-bar {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: white;
+  padding: 3px 6px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Press Start 2P", cursive;
+}
+.window-controls button {
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  font-size: 10px;
+  margin-left: 2px;
+  cursor: pointer;
+}
+
+/* Main Canvas Container */
+.app-container {
+  display: flex;
+  padding: 5px;
+}
+.canvas-container {
+  width: 600px;
+  height: 400px;
+  background-color: #ffffff;
+  background-image: linear-gradient(#e0e0e0 1px, transparent 1px),
+    linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px; /* Added a graph paper grid */
+  position: relative;
+  overflow: hidden; /* Shoulc contain the lines */
+  margin: 0 10px;
+  cursor: none !important; /* Hides the default cursor */
+}
+
+/* The Movable Paint Cursor */
+#cursor {
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  background-image: url("./Assets/paint-cursor.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 10;
+  transform: translate(-50%, -50%); /* Centers the cursor on mouse */
+  display: none; /* Start hidden, show when the mouse enters */
+}
+
+/* The Shake animation. I added this just for fun.. */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-5px, 5px);
+  }
+  75% {
+    transform: translate(5px, -5px);
+  }
+}
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* The tool and color boxes */
+.tool-box,
+.color-box {
+  background: #c0c0c0;
+  border: 2px inset #ffffff;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tool,
+.color-swatch {
+  width: 30px;
+  height: 30px;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.tool.selected {
+  border-color: #000000 #dfdfdf #dfdfdf #000000;
+}
+
+/* The taskbar */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #c0c0c0;
+  border-top: 2px solid #dfdfdf;
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  box-sizing: border-box;
+}
+.start-button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  font-family: "Press Start 2P", cursive;
+  font-size: 10px;
+  padding: 4px 10px;
+}
+
+.start-button:active {
+  border-color: #000000 #dfdfdf #dfdfdf #000000;
+  background-position: 9px center;
+}
+
+/* Start Button with the icon */
+.start-button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  font-family: "Press Start 2P", cursive;
+  font-size: 10px;
+  padding: 4px 10px 4px 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 22px;
+}
+
+.start-button:hover {
+  border-color: #000000 #dfdfdf #dfdfdf #000000;
+}
+
+.start-button:active {
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  background: #a0a0a0;
+}
+
+/* The Start Icon */
+.start-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Menu Bar adjustments */
+.menu-bar {
+  display: flex;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #808080;
+  padding: 2px 0;
+  font-size: 12px;
+}
+
+.menu-item {
+  position: relative;
+  padding: 3px 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.menu-item:hover {
+  border: 1px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.menu-item:active {
+  border: 1px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  background: #c0c0c0;
+}
+
+.menu-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  min-width: 150px;
+  z-index: 100;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.menu-item:hover .menu-dropdown {
+  display: block;
+}
+
+.menu-option {
+  padding: 4px 20px;
+  cursor: pointer;
+}
+
+.menu-option:hover {
+  background: #000080;
+  color: white;
+}
+
+.menu-option.separator {
+  height: 1px;
+  background: #808080;
+  margin: 3px 0;
+  padding: 0;
+  cursor: default;
+}
+
+.menu-option.separator:hover {
+  background: #808080;
+}
+
+/* The styling of the Help Window */
+.instructions,
+.about {
+  width: 400px;
+  z-index: 50;
+}
+
+.window-body {
+  padding: 15px;
+  background: white;
+  min-height: 200px;
+}
+
+.help-content h3 {
+  margin-top: 0;
+  color: #000080;
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+}
+
+.help-section {
+  margin: 15px 0;
+  padding: 10px;
+  background: #f0f0f0;
+  border: 1px solid #c0c0c0;
+}
+
+.help-section h4 {
+  margin: 0 0 8px 0;
+  color: #000080;
+  font-size: 11px;
+}
+
+.help-section ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 11px;
+}
+
+.help-section li {
+  margin: 4px 0;
+}
+
+.windows-tip {
+  margin-top: 15px;
+  padding: 8px;
+  background: #ffffcc;
+  border: 1px solid #cccc99;
+  font-size: 11px;
+  font-style: italic;
+}
+
+/* About Window sytling */
+.about-body {
+  text-align: center;
+}
+
+.about-icon {
+  font-size: 48px;
+  margin: 10px 0;
+}
+
+.about-body h3 {
+  color: #000080;
+  margin: 10px 0;
+}
+
+.system-info {
+  margin: 15px 0;
+  padding: 10px;
+  background: #f0f0f0;
+  border: 1px dotted #808080;
+  font-size: 11px;
+  text-align: left;
+}
+
+.windows-button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 4px 15px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.windows-button:hover {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.windows-button:active {
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+/* Made some Task Bar adjustments */
+.taskbar-items {
+  display: flex;
+  flex-grow: 1;
+  margin: 0 10px;
+}
+
+.taskbar-item {
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 3px 8px;
+  margin: 0 2px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+}
+
+.taskbar-item.active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #c0c0c0;
+}
+
+.taskbar-icon {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+/* The Status Bar */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  background: #c0c0c0;
+  border-top: 2px solid #808080;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #000080;
+}
+
+.tool-display {
+  font-weight: bold;
+}
+
+/* Minimize/Maximize/Close Button hover effects */
+.window-controls button:hover {
+  background: #a0a0a0;
+}
+
+.window-controls button:active {
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+#color-indicator {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  pointer-events: none;
+  z-index: 15;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Hides the color indicator when "shook" */
+.shake ~ #color-indicator {
+  display: none !important;
+}
+
+/* Icon stylings */
+.custom-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.help-icon {
+  width: 22px;
+  height: 22px;
+  margin: 0 auto;
+}
+
+.tool-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 0 auto;
+}
+
+.taskbar-img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.about-img {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Removes old styling if needed */
+.tool:not(:has(img)) {
+  font-size: 16px;
+}
+
+/* The Desktop Icons */
+.desktop-icons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 5; /* Should keep them behind the windows but above the desktop */
+  transition: opacity 0.3s ease;
+}
+
+/* Desktop Icon Links */
+.desktop-icon-link {
+  text-decoration: none;
+  display: block;
+}
+
+.desktop-icon-link:hover .desktop-icon {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.desktop-icon-link:active .desktop-icon {
+  background-color: rgba(0, 0, 128, 0.3);
+  border: 1px dotted #000080;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+/* The styling for the icon labels */
+.icon-label {
+  font-size: 11px;
+  color: white;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-family: "Courier New", monospace;
+  padding: 2px 4px;
+  border-radius: 2px;
+  width: 100%;
+  word-break: break-word;
+}
+
+/* Should make it so it is hidden on small screens by default */
+@media (max-width: 1024px) {
+  .desktop-icons {
+    display: none;
+  }
+}
+
+/* Individual Icon styling */
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+.desktop-icon:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.desktop-icon:active {
+  border: 1px dotted #000080;
+}
+
+/* Icon Images */
+.icon-img {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+/* Had to make some adjustments to not have the Monster Truck Madness icon to become too large*/
+.icon-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Added a drop shadow */
+.icon-img img {
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* Specific fallback icon styles */
+.recycle-bin {
+  color: #008080; /* Teal like Windows 98 */
+}
+
+.my-computer {
+  color: #000080; /* Windows blue */
+}
+
+.monster-truck-madness {
+  color: #800080; /* Purple */
+}
+
+/* Icon Labels adjustments */
+.icon-label {
+  font-size: 11px;
+  color: white;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-family: "Courier New", monospace; /* Windows 98 style label background */
+  padding: 2px 4px;
+  border-radius: 2px;
+  width: 100%;
+  word-break: break-word;
+}
+
+/* Tried to add a selected styling */
+.desktop-icon.selected .icon-label {
+  background-color: #000080; /* Solid blue when selected */
+  color: white;
+}
+
+/* The Monster Truck Madness Error Window */
+.error-window {
+  width: 450px;
+  z-index: 1002;
+}
+
+.error-body {
+  padding: 15px;
+  background: white;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+}
+
+.error-icon-container {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-icon-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.error-text-container {
+  flex: 1;
+}
+
+.error-message-text {
+  margin: 0 0 15px 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #000000;
+  font-family: "Courier New", monospace;
+  min-height: 60px;
+  padding-top: 8px;
+}
+
+.error-button-container {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.error-ok-button {
+  min-width: 70px;
+  padding: 4px 12px;
+}
+
+/* Error window title bar should match the other windows */
+.error-window .title-bar {
+  background: linear-gradient(to right, #000080, #1084d0);
+
+  color: white;
+  padding: 3px 6px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Press Start 2P", cursive;
+}
+
+/* Just hardcoded it here to make sure the close button matches others */
+.error-window .window-controls button {
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  font-size: 10px;
+  margin-left: 2px;
+  cursor: pointer;
+  color: #000000;
+  width: 18px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.error-window .window-controls button:hover {
+  background: #a0a0a0;
+}
+
+.error-window .window-controls button:active {
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+/* Borders sgould now match the other windows */
+.error-window {
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf; /* Classic bevel */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Button styling should also match */
+.error-ok-button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  font-family: "Press Start 2P", cursive;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.error-ok-button:hover {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.error-ok-button:active {
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+.error-ok-button:focus {
+  outline: 1px dotted #000000;
+  outline-offset: 1px;
+}
